@@ -1,0 +1,23 @@
+{
+  "vendor": "stermaxhealth",
+  "name": "alterafundo",
+  "version": "0.0.0",
+  "title": "alterafundo",
+  "description": "App para fazer o fundo dos produtos alterarem de acordo com o produto",
+  "builders": {
+    "react": "3.x",
+    "messages": "1.x",
+    "docs": "0.x",
+    "store": "0.x"
+  },
+  "dependencies": {
+    "vtex.product-context": "0.x",
+    "vtex.css-handles": "0.x",
+    "vtex.search-graphql": "0.x"
+  },
+  "registries": [
+    "smartcheckout"
+  ],
+  "policies": [],
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
+}
