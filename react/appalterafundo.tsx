@@ -39,7 +39,7 @@ function Bundle() {
 
     // Fundo dinâmico do container PDP
     const bgEl = document.querySelector(
-      '.vtex-flex-layout-0-x-flexRowContent--container-pdp-fundo-dinamico'
+      '.vtex-flex-layout-0-x-flexRow--linha-dinamic-background-imagem-pdp'
     ) as HTMLElement | null
 
     const validIdsPlena42 = ['2890']
