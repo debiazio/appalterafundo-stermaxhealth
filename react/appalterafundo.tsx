@@ -4,24 +4,24 @@ import { useProduct } from 'vtex.product-context'
 import GET_PRODUCT_ID from './graphql/getProductId.graphql'
 
 function Bundle() {
-      const productContext = useProduct()
-      const slug = productContext?.product?.linkText
+  const productContext = useProduct()
+  const slug = productContext?.product?.linkText
 
-      const [productId, setProductId] = useState<string | undefined>()
+  const [productId, setProductId] = useState<string | undefined>()
 
-      const { data, loading } = useQuery(GET_PRODUCT_ID, {
-        variables: { slug },
-        skip: !slug,
-      })
+  const { data, loading } = useQuery(GET_PRODUCT_ID, {
+    variables: { slug },
+    skip: !slug,
+  })
 
-      useEffect(() => {
-        if (!loading && data?.product?.productId) {
-          setProductId(data.product.productId)
-        }
-      }, [loading, data])
+  useEffect(() => {
+    if (!loading && data?.product?.productId) {
+      setProductId(data.product.productId)
+    }
+  }, [loading, data])
 
-      useEffect(() => {
-        const mainImageEl = document.querySelector(
+  useEffect(() => {
+    const mainImageEl = document.querySelector(
       '.vtex-store-components-3-x-productImageTag.vtex-store-components-3-x-productImageTag--main'
     ) as HTMLElement | null
 
@@ -37,7 +37,6 @@ function Bundle() {
       }
     }
 
-    // Fundo dinâmico do container PDP
     const bgEl = document.querySelector(
       '.vtex-flex-layout-0-x-flexRow--linha-dinamic-background-imagem-pdp'
     ) as HTMLElement | null
@@ -46,8 +45,18 @@ function Bundle() {
 
     if (bgEl) {
       if (validIdsPlena42.indexOf(productId || '') !== -1) {
-        bgEl.style.backgroundImage =
-          'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/fundo-dinamic-plena-42-aumentado.webp)'
+        const desktopBackground =
+          'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/2600-1200.webp)'
+
+        const mobileOrSmallerDesktopBackground =
+          'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/COLOQUE-AQUI-O-NOME-DO-ARQUIVO.webp)'
+
+        const selectedBackground =
+          window.innerWidth < 1660
+            ? mobileOrSmallerDesktopBackground
+            : desktopBackground
+
+        bgEl.style.backgroundImage = selectedBackground
         bgEl.style.backgroundSize = 'cover'
         bgEl.style.backgroundRepeat = 'no-repeat'
         bgEl.style.backgroundPosition = 'center'
@@ -59,38 +68,21 @@ function Bundle() {
       }
     }
 
-    // ====== EFEITO DA BORDA DO SELETOR DE CORES ======
-    // Mapa direto ID -> classe
     const idToClass: Record<string, string> = {
-      // Rosa
       '2795': 'vtex-store-link-0-x-childrenContainer--link-bell-rosa',
       '2885': 'vtex-store-link-0-x-childrenContainer--link-bell-rosa',
-
-      // Rose Gold
       '2796': 'vtex-store-link-0-x-childrenContainer--link-bell-rose-gold',
       '2886': 'vtex-store-link-0-x-childrenContainer--link-bell-rose-gold',
-
-      // Pérola
       '2797': 'vtex-store-link-0-x-childrenContainer--link-bell-perola',
       '2887': 'vtex-store-link-0-x-childrenContainer--link-bell-perola',
-
-      // Sweet Pink
       '2945': 'vtex-store-link-0-x-childrenContainer--link-sweet-pink',
       '2946': 'vtex-store-link-0-x-childrenContainer--link-sweet-pink',
-
-      // Sweet Black
       '2947': 'vtex-store-link-0-x-childrenContainer--link-sweet-black',
       '2948': 'vtex-store-link-0-x-childrenContainer--link-sweet-black',
-
-      // Glowin
       '2954': 'vtex-store-link-0-x-childrenContainer--link-glowin',
       '2955': 'vtex-store-link-0-x-childrenContainer--link-glowin',
-
-      // Miniatura marcelo brito
       '2902': 'vtex-store-link-0-x-childrenContainer--link-marcelo-brito',
       '2798': 'vtex-store-link-0-x-childrenContainer--link-marcelo-brito',
-
-      // Sweet Silver
       '2974': 'vtex-store-link-0-x-childrenContainer--link-sweet-silver',
     }
 
@@ -143,10 +135,29 @@ function Bundle() {
       })
     }
 
+    const handleResize = () => {
+      if (!bgEl) return
+      if (validIdsPlena42.indexOf(productId || '') === -1) return
+
+      const desktopBackground =
+        'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/2600-1200.webp)'
+
+      const mobileOrSmallerDesktopBackground =
+        'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/1840-1042.webp)'
+
+      bgEl.style.backgroundImage =
+        window.innerWidth < 1660
+          ? mobileOrSmallerDesktopBackground
+          : desktopBackground
+    }
+
+    window.addEventListener('resize', handleResize)
+
     return () => {
       if (observer) observer.disconnect()
 
       clearAllBorders()
+      window.removeEventListener('resize', handleResize)
 
       if (bgEl) {
         bgEl.style.backgroundImage = ''
