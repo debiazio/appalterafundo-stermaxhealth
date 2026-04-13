@@ -25,10 +25,14 @@ function Bundle() {
       '.vtex-store-components-3-x-productImageTag.vtex-store-components-3-x-productImageTag--main'
     ) as HTMLElement | null
 
-    const hideMainImageForIds = ['2890']
+    const hideMainImageForIds = ['2976']
+    const isDesktop = window.innerWidth >= 1000
 
     if (mainImageEl) {
-      if (hideMainImageForIds.indexOf(productId || '') !== -1) {
+      if (
+        hideMainImageForIds.indexOf(productId || '') !== -1 &&
+        isDesktop
+      ) {
         mainImageEl.style.opacity = '0'
         mainImageEl.style.pointerEvents = 'none'
       } else {
@@ -41,22 +45,30 @@ function Bundle() {
       '.vtex-flex-layout-0-x-flexRow--linha-dinamic-background-imagem-pdp'
     ) as HTMLElement | null
 
-    const validIdsPlena42 = ['2890']
+    const validIdsPlena42 = ['2976']
+
+    const desktopBackground =
+      'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/tamanho1.webp)'
+
+    const mediumBackground =
+      'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/tamanho2.webp)'
+
+    const smallBackground =
+      'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/tamanho3-alt.webp)'
+
+    const moreSmallBackground =
+      'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/tamanho7.webp)'
+
+    const getBackgroundByWidth = () => {
+      if (window.innerWidth < 1295) return moreSmallBackground
+      if (window.innerWidth < 1450) return smallBackground
+      if (window.innerWidth < 1660) return mediumBackground
+      return desktopBackground
+    }
 
     if (bgEl) {
       if (validIdsPlena42.indexOf(productId || '') !== -1) {
-        const desktopBackground =
-          'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/2600-1200.webp)'
-
-        const mobileOrSmallerDesktopBackground =
-          'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/COLOQUE-AQUI-O-NOME-DO-ARQUIVO.webp)'
-
-        const selectedBackground =
-          window.innerWidth < 1660
-            ? mobileOrSmallerDesktopBackground
-            : desktopBackground
-
-        bgEl.style.backgroundImage = selectedBackground
+        bgEl.style.backgroundImage = getBackgroundByWidth()
         bgEl.style.backgroundSize = 'cover'
         bgEl.style.backgroundRepeat = 'no-repeat'
         bgEl.style.backgroundPosition = 'center'
@@ -136,19 +148,24 @@ function Bundle() {
     }
 
     const handleResize = () => {
+      if (mainImageEl) {
+        const shouldHideMainImage =
+          hideMainImageForIds.indexOf(productId || '') !== -1 &&
+          window.innerWidth >= 1024
+
+        if (shouldHideMainImage) {
+          mainImageEl.style.opacity = '0'
+          mainImageEl.style.pointerEvents = 'none'
+        } else {
+          mainImageEl.style.opacity = '1'
+          mainImageEl.style.pointerEvents = ''
+        }
+      }
+
       if (!bgEl) return
       if (validIdsPlena42.indexOf(productId || '') === -1) return
 
-      const desktopBackground =
-        'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/2600-1200.webp)'
-
-      const mobileOrSmallerDesktopBackground =
-        'url(https://stermax.com.br/images_idealine/fundo-dinamico-stermaxhealth/1840-1042.webp)'
-
-      bgEl.style.backgroundImage =
-        window.innerWidth < 1660
-          ? mobileOrSmallerDesktopBackground
-          : desktopBackground
+      bgEl.style.backgroundImage = getBackgroundByWidth()
     }
 
     window.addEventListener('resize', handleResize)
@@ -158,6 +175,11 @@ function Bundle() {
 
       clearAllBorders()
       window.removeEventListener('resize', handleResize)
+
+      if (mainImageEl) {
+        mainImageEl.style.opacity = '1'
+        mainImageEl.style.pointerEvents = ''
+      }
 
       if (bgEl) {
         bgEl.style.backgroundImage = ''
