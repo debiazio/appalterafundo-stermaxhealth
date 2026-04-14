@@ -4,5 +4,8 @@
   },
   "plenavr": {
     "component": "plenavr"
+  },
+  "productthemecontroller": {
+    "component": "productthemecontroller"
   }
 }
