@@ -1,5 +1,8 @@
 {
   "appalterafundo": {
     "component": "appalterafundo"
+  },
+  "plenavr": {
+    "component": "plenavr"
   }
 }
