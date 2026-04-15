@@ -23,6 +23,12 @@ const HEADER_MENU_LINK_SELECTOR =
 const LOGO_SELECTOR =
   '.vtex-store-components-3-x-logoImage.vtex-store-components-3-x-logoImage--logo'
 
+const FOOTER_REDES_IMAGE_SELECTOR =
+  '.vtex-store-components-3-x-imageElement.vtex-store-components-3-x-imageElement--img-footer-redes'
+
+const BUTTON_SELECTOR =
+  '.vtex-button.bw1.ba.fw5.v-mid.relative.pa0.lh-solid.br2.min-h-regular.t-action.bg-action-primary.b--action-primary.c-on-action-primary.hover-bg-action-primary.hover-b--action-primary.hover-c-on-action-primary.pointer'
+
 const FOOTER_CLASS_ACTIVE = 'footer-plena'
 const FOOTER_ROW_CLASS_ACTIVE = 'footer-digitando-plena'
 const FOOTER_FINAL_ROW_CLASS_ACTIVE = 'footer-linha-final-plena'
@@ -30,16 +36,25 @@ const FOOTER_TEXT_CLASS_ACTIVE = 'footer-texto-digitando-plena'
 const HEADER_TOP_CLASS_ACTIVE = 'header-topo-plena'
 const HEADER_MENU_LINK_CLASS_ACTIVE = 'header-menu-link-plena'
 const LOGO_CLASS_ACTIVE = 'logo-plena'
+const FOOTER_REDES_IMAGE_CLASS_ACTIVE = 'img-footer-redes-plena'
+const BUTTON_CLASS_ACTIVE = 'button-plena'
 
 const GRADIENT_REVERSED = 'linear-gradient(to right, #8435DE, #A30D87)'
 const FOOTER_ROW_COLOR = '#FF7500'
 const FOOTER_TEXT_COLOR = '#FFFFFF'
 const HEADER_MENU_LINK_COLOR = '#FF7500'
+const BUTTON_COLOR = '#8435DE'
+
 const NEW_LOGO_URL =
   'https://stermaxhealth.vtexassets.com/assets/vtex.file-manager-graphql/images/9d18bee6-a0dd-4942-8efe-d13a81399cb2___b27344b9507a5abda5a1a9b631911d51.png'
 
+const NEW_FOOTER_REDES_IMAGE_URL =
+  'https://stermaxhealth.vtexassets.com/assets/vtex.file-manager-graphql/images/b77e251c-13fe-4cdb-8c4c-55b8fad87392___ffcceff5d97635961f0a4daeb4ee5867.png'
+
 const ORIGINAL_LOGO_SRC_ATTR = 'data-original-logo-src'
 const ORIGINAL_LOGO_SRCSET_ATTR = 'data-original-logo-srcset'
+const ORIGINAL_FOOTER_REDES_SRC_ATTR = 'data-original-footer-redes-src'
+const ORIGINAL_FOOTER_REDES_SRCSET_ATTR = 'data-original-footer-redes-srcset'
 
 const ProductThemeController: React.FC = () => {
   const productContext = useProduct()
@@ -60,6 +75,7 @@ const ProductThemeController: React.FC = () => {
       ) as HTMLElement | null
       const headerMenuLinks = document.querySelectorAll(HEADER_MENU_LINK_SELECTOR)
       const logo = document.querySelector(LOGO_SELECTOR) as HTMLImageElement | null
+      const buttons = document.querySelectorAll(BUTTON_SELECTOR)
 
       if (headerTop) {
         headerTop.classList.remove(HEADER_TOP_CLASS_ACTIVE)
@@ -80,6 +96,20 @@ const ProductThemeController: React.FC = () => {
         if (isTargetProduct) {
           link.classList.add(HEADER_MENU_LINK_CLASS_ACTIVE)
           link.style.color = HEADER_MENU_LINK_COLOR
+        }
+      })
+
+      buttons.forEach(buttonNode => {
+        const button = buttonNode as HTMLElement
+        button.classList.remove(BUTTON_CLASS_ACTIVE)
+        button.style.backgroundColor = ''
+        button.style.borderColor = ''
+        button.style.backgroundImage = ''
+
+        if (isTargetProduct) {
+          button.classList.add(BUTTON_CLASS_ACTIVE)
+          button.style.backgroundColor = BUTTON_COLOR
+          button.style.borderColor = BUTTON_COLOR
         }
       })
 
@@ -132,6 +162,9 @@ const ProductThemeController: React.FC = () => {
         FOOTER_FINAL_ROW_SELECTOR
       ) as HTMLElement | null
       const footerTexts = document.querySelectorAll(FOOTER_TEXT_SELECTOR)
+      const footerRedesImages = document.querySelectorAll(
+        FOOTER_REDES_IMAGE_SELECTOR
+      ) as NodeListOf<HTMLImageElement>
 
       if (footer) {
         footer.classList.remove(FOOTER_CLASS_ACTIVE)
@@ -177,6 +210,47 @@ const ProductThemeController: React.FC = () => {
           text.style.color = FOOTER_TEXT_COLOR
         }
       })
+
+      footerRedesImages.forEach(image => {
+        image.classList.remove(FOOTER_REDES_IMAGE_CLASS_ACTIVE)
+
+        if (!image.getAttribute(ORIGINAL_FOOTER_REDES_SRC_ATTR)) {
+          image.setAttribute(
+            ORIGINAL_FOOTER_REDES_SRC_ATTR,
+            image.currentSrc || image.src || ''
+          )
+        }
+
+        if (!image.getAttribute(ORIGINAL_FOOTER_REDES_SRCSET_ATTR)) {
+          image.setAttribute(
+            ORIGINAL_FOOTER_REDES_SRCSET_ATTR,
+            image.getAttribute('srcset') || ''
+          )
+        }
+
+        const originalSrc =
+          image.getAttribute(ORIGINAL_FOOTER_REDES_SRC_ATTR) || ''
+        const originalSrcSet =
+          image.getAttribute(ORIGINAL_FOOTER_REDES_SRCSET_ATTR) || ''
+
+        if (isTargetProduct) {
+          if (image.src !== NEW_FOOTER_REDES_IMAGE_URL) {
+            image.classList.add(FOOTER_REDES_IMAGE_CLASS_ACTIVE)
+            image.src = NEW_FOOTER_REDES_IMAGE_URL
+            image.setAttribute('srcset', NEW_FOOTER_REDES_IMAGE_URL)
+          }
+        } else {
+          if (originalSrc && image.src !== originalSrc) {
+            image.src = originalSrc
+          }
+
+          if (originalSrcSet) {
+            image.setAttribute('srcset', originalSrcSet)
+          } else {
+            image.removeAttribute('srcset')
+          }
+        }
+      })
     }
 
     const applyTheme = () => {
@@ -196,10 +270,12 @@ const ProductThemeController: React.FC = () => {
         document.querySelector(HEADER_TOP_SELECTOR) ||
           document.querySelector(LOGO_SELECTOR) ||
           document.querySelector(HEADER_MENU_LINK_SELECTOR) ||
+          document.querySelector(BUTTON_SELECTOR) ||
           document.querySelector(FOOTER_SELECTOR) ||
           document.querySelector(FOOTER_ROW_SELECTOR) ||
           document.querySelector(FOOTER_FINAL_ROW_SELECTOR) ||
-          document.querySelector(FOOTER_TEXT_SELECTOR)
+          document.querySelector(FOOTER_TEXT_SELECTOR) ||
+          document.querySelector(FOOTER_REDES_IMAGE_SELECTOR)
       )
     }
 
@@ -254,7 +330,11 @@ const ProductThemeController: React.FC = () => {
         HEADER_TOP_SELECTOR
       ) as HTMLElement | null
       const headerMenuLinks = document.querySelectorAll(HEADER_MENU_LINK_SELECTOR)
+      const buttons = document.querySelectorAll(BUTTON_SELECTOR)
       const logo = document.querySelector(LOGO_SELECTOR) as HTMLImageElement | null
+      const footerRedesImages = document.querySelectorAll(
+        FOOTER_REDES_IMAGE_SELECTOR
+      ) as NodeListOf<HTMLImageElement>
 
       if (footer) {
         footer.classList.remove(FOOTER_CLASS_ACTIVE)
@@ -293,6 +373,14 @@ const ProductThemeController: React.FC = () => {
         link.style.color = ''
       })
 
+      buttons.forEach(buttonNode => {
+        const button = buttonNode as HTMLElement
+        button.classList.remove(BUTTON_CLASS_ACTIVE)
+        button.style.backgroundColor = ''
+        button.style.borderColor = ''
+        button.style.backgroundImage = ''
+      })
+
       if (logo) {
         logo.classList.remove(LOGO_CLASS_ACTIVE)
 
@@ -309,6 +397,25 @@ const ProductThemeController: React.FC = () => {
           logo.removeAttribute('srcset')
         }
       }
+
+      footerRedesImages.forEach(image => {
+        image.classList.remove(FOOTER_REDES_IMAGE_CLASS_ACTIVE)
+
+        const originalSrc =
+          image.getAttribute(ORIGINAL_FOOTER_REDES_SRC_ATTR) || ''
+        const originalSrcSet =
+          image.getAttribute(ORIGINAL_FOOTER_REDES_SRCSET_ATTR) || ''
+
+        if (originalSrc) {
+          image.src = originalSrc
+        }
+
+        if (originalSrcSet) {
+          image.setAttribute('srcset', originalSrcSet)
+        } else {
+          image.removeAttribute('srcset')
+        }
+      })
     }
   }, [product])
 
