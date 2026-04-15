@@ -1,7 +1,7 @@
 {
   "vendor": "stermaxhealth",
   "name": "appalterafundo",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "title": "appalterafundo",
   "description": "App para fazer o fundo dos produtos alterarem de acordo com o produto",
   "builders": {
