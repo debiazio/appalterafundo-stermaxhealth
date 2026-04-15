@@ -1,0 +1,190 @@
+.plenaHotspots {
+  width: 100%;
+}
+
+.plenaHotspots__stage {
+  position: relative;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.plenaHotspots__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+
+.plenaHotspots__pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 0 0 8px rgba(255, 255, 255, 0.28),
+    0 4px 14px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    background-color 0.22s ease;
+}
+
+.plenaHotspots__pin:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow:
+    0 0 0 10px rgba(255, 255, 255, 0.32),
+    0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.plenaHotspots__pin--active {
+  background: #ffffff;
+  box-shadow:
+    0 0 0 8px rgba(255, 255, 255, 0.24),
+    0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+.plenaHotspots__pinInner {
+  color: #FF7500;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.22s ease,
+    color 0.22s ease,
+    opacity 0.22s ease;
+}
+
+.plenaHotspots__pinInner--active {
+  color: #111111;
+  transform: rotate(90deg) scale(0.96);
+}
+
+.plenaHotspots__card {
+  position: absolute;
+  transform: translate(0, 0);
+  width: min(320px, 28vw);
+  min-width: 220px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 16px;
+  padding: 18px 18px 16px;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.18);
+  z-index: 4;
+}
+
+.plenaHotspots__close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  color: #111111;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.plenaHotspots__close:hover {
+  transform: scale(1.08);
+  opacity: 0.8;
+}
+
+.plenaHotspots__cardTitle {
+  margin: 0 24px 10px 0;
+  font-size: 24px;
+  line-height: 1.05;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #111111;
+  text-align: center;
+}
+
+.plenaHotspots__cardText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #333333;
+}
+
+@media (max-width: 1024px) {
+  .plenaHotspots__pin {
+    width: 30px;
+    height: 30px;
+  }
+
+  .plenaHotspots__pinInner {
+    font-size: 21px;
+  }
+
+  .plenaHotspots__card {
+    width: min(280px, 42vw);
+    padding: 16px 16px 14px;
+  }
+
+  .plenaHotspots__cardTitle {
+    font-size: 20px;
+  }
+
+  .plenaHotspots__cardText {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .plenaHotspots__pin {
+    width: 28px;
+    height: 28px;
+  }
+
+  .plenaHotspots__pinInner {
+    font-size: 19px;
+  }
+
+  .plenaHotspots__card {
+    width: min(240px, 62vw);
+    min-width: 0;
+    padding: 14px 14px 12px;
+  }
+
+  .plenaHotspots__cardTitle {
+    font-size: 16px;
+    line-height: 1.15;
+  }
+
+  .plenaHotspots__cardText {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 560px) {
+  .plenaHotspots__card {
+    left: 50% !important;
+    top: auto !important;
+    bottom: 16px;
+    transform: translateX(-50%);
+    width: calc(100% - 24px);
+    max-width: 360px;
+  }
+
+  .plenaHotspots__pin {
+    width: 26px;
+    height: 26px;
+  }
+
+  .plenaHotspots__pinInner {
+    font-size: 18px;
+  }
+}
