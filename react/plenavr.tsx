@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { IMAGE_BASES } from './config/imageBases'
 
 const BASE_URL = IMAGE_BASES.plenaVr
@@ -7,21 +7,35 @@ const MAX_SUFFIX = 18
 const HORIZONTAL_STEP = 18
 const VERTICAL_STEP = 42
 
-// Ordem visual real da vertical
 const VERTICAL_ORDER = [4, 3, 2, 1, 0, 5, 6, 7, 8]
 
-// Começa na posição reta (prefix 0)
-const INITIAL_VERTICAL_INDEX = 4
+// Inicia em 6_3
+const INITIAL_VERTICAL_INDEX = 6
+const INITIAL_SUFFIX = 3
 
 const plenavr: React.FC = () => {
   const [verticalIndex, setVerticalIndex] = useState(INITIAL_VERTICAL_INDEX)
-  const [suffix, setSuffix] = useState(0)
+  const [suffix, setSuffix] = useState(INITIAL_SUFFIX)
   const [isDragging, setIsDragging] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   const startXRef = useRef(0)
   const startYRef = useRef(0)
   const accXRef = useRef(0)
   const accYRef = useRef(0)
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+
+    checkIsMobile()
+    window.addEventListener('resize', checkIsMobile)
+
+    return () => {
+      window.removeEventListener('resize', checkIsMobile)
+    }
+  }, [])
 
   const prefix = VERTICAL_ORDER[verticalIndex]
 
@@ -71,9 +85,6 @@ const plenavr: React.FC = () => {
     accXRef.current += deltaX
     accYRef.current += deltaY
 
-    // Horizontal corrigido
-    // direita -> avança frame
-    // esquerda -> volta frame
     while (Math.abs(accXRef.current) >= HORIZONTAL_STEP) {
       if (accXRef.current > 0) {
         setSuffix(prev => (prev + 1) % (MAX_SUFFIX + 1))
@@ -84,9 +95,6 @@ const plenavr: React.FC = () => {
       }
     }
 
-    // Vertical mantido como correto
-    // cima -> desce
-    // baixo -> sobe
     while (Math.abs(accYRef.current) >= VERTICAL_STEP) {
       if (accYRef.current < 0) {
         setVerticalIndex(prev =>
@@ -117,27 +125,94 @@ const plenavr: React.FC = () => {
         alignItems: 'center',
       }}
     >
-      <img
-        src={imageUrl}
-        alt={`Imagem 360 ${prefix}_${suffix}`}
-        onMouseDown={handleStart}
-        onMouseMove={handleMove}
-        onMouseUp={handleEnd}
-        onMouseLeave={handleEnd}
-        onTouchStart={handleStart}
-        onTouchMove={handleMove}
-        onTouchEnd={handleEnd}
-        draggable={false}
+      <div
         style={{
+          position: 'relative',
           width: '100%',
-          display: 'block',
-          cursor: isDragging ? 'grabbing' : 'grab',
-          margin: '24px',
-          boxShadow: 'white 1px 1px 74px',
-          borderRadius: '25px',
-          backgroundColor: 'white',
+          display: 'flex',
+          justifyContent: 'center',
         }}
-      />
+      >
+        {!isDragging && (
+          <>
+            <div
+              style={{
+                position: 'absolute',
+                top: isMobile ? '15px' : '80px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 2,
+                textAlign: 'center',
+                pointerEvents: 'none',
+                color: 'rgb(31, 31, 31)',
+                padding: '0px 16px',
+                width: isMobile ? 'max-content' : undefined,
+              }}
+            >
+              <span
+                style={{
+                  display: 'block',
+                  fontSize: '16px',
+                  lineHeight: '20px',
+                  fontWeight: 400,
+                }}
+              >
+                Clique e arraste:
+              </span>
+
+              <strong
+                style={{
+                  display: 'block',
+                  fontSize: '20px',
+                  lineHeight: '26px',
+                  fontWeight: 700,
+                }}
+              >
+                Explore a plenitude em cada ângulo
+              </strong>
+            </div>
+
+            <img
+              src="https://stermaxhealth.vtexassets.com/assets/vtex.file-manager-graphql/images/985c1059-565b-44b7-b879-98584bc5461f___8665119b974beeab48b9a8a1cc644a67.webp"
+              alt="Ícone de interação"
+              draggable={false}
+              style={{
+                position: 'absolute',
+                bottom: isMobile ? '10px' : '60px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 2,
+                width: isMobile ? '36px' : '56px',
+                height: isMobile ? '36px' : '56px',
+                objectFit: 'contain',
+                pointerEvents: 'none',
+              }}
+            />
+          </>
+        )}
+
+        <img
+          src={imageUrl}
+          alt={`Imagem 360 ${prefix}_${suffix}`}
+          onMouseDown={handleStart}
+          onMouseMove={handleMove}
+          onMouseUp={handleEnd}
+          onMouseLeave={handleEnd}
+          onTouchStart={handleStart}
+          onTouchMove={handleMove}
+          onTouchEnd={handleEnd}
+          draggable={false}
+          style={{
+            width: '100%',
+            display: 'block',
+            cursor: isDragging ? 'grabbing' : 'grab',
+            margin: '0px',
+            boxShadow: 'white 1px 1px 74px',
+            borderRadius: '25px',
+            backgroundColor: 'white',
+          }}
+        />
+      </div>
     </div>
   )
 }
