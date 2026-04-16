@@ -29,6 +29,9 @@ const FOOTER_REDES_IMAGE_SELECTOR =
 const BUTTON_SELECTOR =
   '.vtex-button.bw1.ba.fw5.v-mid.relative.pa0.lh-solid.br2.min-h-regular.t-action.bg-action-primary.b--action-primary.c-on-action-primary.hover-bg-action-primary.hover-b--action-primary.hover-c-on-action-primary.pointer'
 
+const PRODUCT_BRAND_QUICKVIEW_SELECTOR =
+  '.vtex-store-components-3-x-productBrand.vtex-store-components-3-x-productBrand--quickview'
+
 const FOOTER_CLASS_ACTIVE = 'footer-plena'
 const FOOTER_ROW_CLASS_ACTIVE = 'footer-digitando-plena'
 const FOOTER_FINAL_ROW_CLASS_ACTIVE = 'footer-linha-final-plena'
@@ -38,12 +41,14 @@ const HEADER_MENU_LINK_CLASS_ACTIVE = 'header-menu-link-plena'
 const LOGO_CLASS_ACTIVE = 'logo-plena'
 const FOOTER_REDES_IMAGE_CLASS_ACTIVE = 'img-footer-redes-plena'
 const BUTTON_CLASS_ACTIVE = 'button-plena'
+const PRODUCT_BRAND_QUICKVIEW_CLASS_ACTIVE = 'product-brand-quickview-plena'
 
 const GRADIENT_REVERSED = 'linear-gradient(to right, #8435DE, #A30D87)'
 const FOOTER_ROW_COLOR = '#FF7500'
 const FOOTER_TEXT_COLOR = '#FFFFFF'
 const HEADER_MENU_LINK_COLOR = '#FF7500'
 const BUTTON_COLOR = '#8435DE'
+const PRODUCT_BRAND_QUICKVIEW_COLOR = '#FF7500'
 
 const NEW_LOGO_URL =
   'https://stermaxhealth.vtexassets.com/assets/vtex.file-manager-graphql/images/9d18bee6-a0dd-4942-8efe-d13a81399cb2___b27344b9507a5abda5a1a9b631911d51.png'
@@ -76,6 +81,9 @@ const ProductThemeController: React.FC = () => {
       const headerMenuLinks = document.querySelectorAll(HEADER_MENU_LINK_SELECTOR)
       const logo = document.querySelector(LOGO_SELECTOR) as HTMLImageElement | null
       const buttons = document.querySelectorAll(BUTTON_SELECTOR)
+      const productBrandsQuickview = document.querySelectorAll(
+        PRODUCT_BRAND_QUICKVIEW_SELECTOR
+      )
 
       if (headerTop) {
         headerTop.classList.remove(HEADER_TOP_CLASS_ACTIVE)
@@ -110,6 +118,17 @@ const ProductThemeController: React.FC = () => {
           button.classList.add(BUTTON_CLASS_ACTIVE)
           button.style.backgroundColor = BUTTON_COLOR
           button.style.borderColor = BUTTON_COLOR
+        }
+      })
+
+      productBrandsQuickview.forEach(brandNode => {
+        const brand = brandNode as HTMLElement
+        brand.classList.remove(PRODUCT_BRAND_QUICKVIEW_CLASS_ACTIVE)
+        brand.style.color = ''
+
+        if (isTargetProduct) {
+          brand.classList.add(PRODUCT_BRAND_QUICKVIEW_CLASS_ACTIVE)
+          brand.style.color = PRODUCT_BRAND_QUICKVIEW_COLOR
         }
       })
 
@@ -271,6 +290,7 @@ const ProductThemeController: React.FC = () => {
           document.querySelector(LOGO_SELECTOR) ||
           document.querySelector(HEADER_MENU_LINK_SELECTOR) ||
           document.querySelector(BUTTON_SELECTOR) ||
+          document.querySelector(PRODUCT_BRAND_QUICKVIEW_SELECTOR) ||
           document.querySelector(FOOTER_SELECTOR) ||
           document.querySelector(FOOTER_ROW_SELECTOR) ||
           document.querySelector(FOOTER_FINAL_ROW_SELECTOR) ||
@@ -331,6 +351,9 @@ const ProductThemeController: React.FC = () => {
       ) as HTMLElement | null
       const headerMenuLinks = document.querySelectorAll(HEADER_MENU_LINK_SELECTOR)
       const buttons = document.querySelectorAll(BUTTON_SELECTOR)
+      const productBrandsQuickview = document.querySelectorAll(
+        PRODUCT_BRAND_QUICKVIEW_SELECTOR
+      )
       const logo = document.querySelector(LOGO_SELECTOR) as HTMLImageElement | null
       const footerRedesImages = document.querySelectorAll(
         FOOTER_REDES_IMAGE_SELECTOR
@@ -379,6 +402,12 @@ const ProductThemeController: React.FC = () => {
         button.style.backgroundColor = ''
         button.style.borderColor = ''
         button.style.backgroundImage = ''
+      })
+
+      productBrandsQuickview.forEach(brandNode => {
+        const brand = brandNode as HTMLElement
+        brand.classList.remove(PRODUCT_BRAND_QUICKVIEW_CLASS_ACTIVE)
+        brand.style.color = ''
       })
 
       if (logo) {
